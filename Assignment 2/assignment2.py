@@ -7,10 +7,18 @@ script, filename = argv
 
 txt = open(filename)
 fileList = txt.readlines()
-dataDump = []
-for x in dataDump:
-	dataDump.append(dataDump)
-dataDump = numpy.array(dataDump)
+#dataDump = []
+#for x in dataDump:
+#	dataDump.append(dataDump)
+#dataDump = numpy.array(dataDump)
+f = open("assignment2.arff", "w")
+f.write('''@RELATION music_speech
+@ATTRIBUTE RMS NUMERIC
+@ATTRIBUTE PAR NUMERIC
+@ATTRIBUTE ZCR NUMERIC
+@ATTRIBUTE MAD NUMERIC
+@ATTRIBUTE class {music,speech}\n
+@DATA\n''')
 for i in fileList:
 	j, k = i.split("\t") #split string after \t
 	rate, sample = wavfile.read(j) #read in wavfile
@@ -27,9 +35,6 @@ for i in fileList:
 	MAD = numpy.median(numpy.abs(npArray - numpy.median(npArray)))
 	
 	data = [RMS, PAR, ZCR, MAD, k]
-	numpy.append(data, dataDump)
-	
-#writer = arff.Writer('assignment2.arff', relation="music_speech", names=['RMS', 'PAR', 'ZCR', 'MAD', 'class'])
-#writer.pytypes[arff.nominal] = '{music,speech}'
-#writer.write([arff.nominal('class')])
-#arff.dump(open('assignment2.arff', 'w'), dataDump, relation="music_speech", names=['RMS', 'PAR', 'ZCR', 'MAD', 'class'])
+	f.write("%f,%f,%f,%f,%s" %(RMS, PAR, ZCR, MAD, k))
+	#numpy.append(data, dataDump)
+f.close()
