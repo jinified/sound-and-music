@@ -3,6 +3,7 @@ from scipy.io import wavfile
 import numpy as np
 import arff
 import matplotlib.pyplot as plt
+#import pylab
 
 script, filename = argv
 
@@ -22,8 +23,8 @@ f.write('''@RELATION music_speech
 features_music = np.zeros((num_files,4))
 features_speech = np.zeros((num_files,4))
 
-for i in fileList:
-	j, k = i.split("\t") #split string after \t
+for i in range(num_files):
+	j, k = fileList[i].split("\t") #split string after \t
 	rate, sample = wavfile.read(j) #read in wavfile
 	sample = sample / 32768.0 #convert sample to floats
 	npArray = np.array(sample)
@@ -38,12 +39,15 @@ for i in fileList:
 	
 	f.write("%f,%f,%f,%f,%s" %(RMS, PAR, ZCR, MAD, k))
 	
-	data = [RMS, PAR, ZCR, MAD]	
-	if k == "music":
+	data = [RMS, PAR, ZCR, MAD]
+	if "music" in k:
 		features_music[i] = data
 	else:
 		features_speech[i] = data
+
 plt.plot(features_music[:,2], features_music[:,1])
+plt.savefig("music.png")
 plt.plot(features_speech[:,2], features_speech[:,1])
+plt.savefig("speech.png")
 
 f.close()
