@@ -1,0 +1,67 @@
+=== Run information ===
+
+Scheme:weka.classifiers.trees.SimpleCart -S 1 -M 2.0 -N 5 -C 1.0
+Relation:     music_speech
+Instances:    128
+Attributes:   5
+              RMS
+              PAR
+              ZCR
+              MAD
+              class
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+CART Decision Tree
+
+MAD < 0.033981
+|  ZCR < 343.93307100000004
+|  |  MAD < 0.017440999999999998
+|  |  |  RMS < 2.2117415: music(3.0/0.0)
+|  |  |  RMS >= 2.2117415: speech(5.0/0.0)
+|  |  MAD >= 0.017440999999999998: music(6.0/1.0)
+|  ZCR >= 343.93307100000004
+|  |  MAD < 0.023849500000000003: speech(38.0/1.0)
+|  |  MAD >= 0.023849500000000003
+|  |  |  RMS < 4.6846185: music(7.0/1.0)
+|  |  |  RMS >= 4.6846185
+|  |  |  |  ZCR < 378.65747999999996: music(2.0/1.0)
+|  |  |  |  ZCR >= 378.65747999999996: speech(13.0/0.0)
+MAD >= 0.033981
+|  PAR < 0.0607025
+|  |  ZCR < 505.1889765: music(2.0/0.0)
+|  |  ZCR >= 505.1889765: speech(4.0/0.0)
+|  PAR >= 0.0607025: music(43.0/1.0)
+
+Number of Leaf Nodes: 10
+
+Size of the Tree: 19
+
+Time taken to build model: 0.04 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         106               82.8125 %
+Incorrectly Classified Instances        22               17.1875 %
+Kappa statistic                          0.6563
+Mean absolute error                      0.22  
+Root mean squared error                  0.384 
+Relative absolute error                 43.9814 %
+Root relative squared error             76.7612 %
+Total Number of Instances              128     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.844     0.188      0.818     0.844     0.831      0.845    music
+                 0.813     0.156      0.839     0.813     0.825      0.845    speech
+Weighted Avg.    0.828     0.172      0.828     0.828     0.828      0.845
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 54 10 |  a = music
+ 12 52 |  b = speech
+

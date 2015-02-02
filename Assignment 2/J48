@@ -1,0 +1,71 @@
+=== Run information ===
+
+Scheme:weka.classifiers.trees.J48 -C 0.25 -M 2
+Relation:     music_speech
+Instances:    128
+Attributes:   5
+              RMS
+              PAR
+              ZCR
+              MAD
+              class
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+J48 pruned tree
+------------------
+
+MAD <= 0.033813
+|   PAR <= 0.161472
+|   |   PAR <= 0.065989: speech (23.0/1.0)
+|   |   PAR > 0.065989
+|   |   |   RMS <= 5.941531
+|   |   |   |   MAD <= 0.019379
+|   |   |   |   |   RMS <= 1.915819: music (3.0)
+|   |   |   |   |   RMS > 1.915819
+|   |   |   |   |   |   ZCR <= 288.251969
+|   |   |   |   |   |   |   MAD <= 0.012573: speech (3.0)
+|   |   |   |   |   |   |   MAD > 0.012573: music (3.0)
+|   |   |   |   |   |   ZCR > 288.251969: speech (7.0)
+|   |   |   |   MAD > 0.019379: music (12.0)
+|   |   |   RMS > 5.941531: speech (8.0)
+|   PAR > 0.161472: speech (19.0)
+MAD > 0.033813
+|   PAR <= 0.059938
+|   |   ZCR <= 503.133858: music (2.0)
+|   |   ZCR > 503.133858: speech (4.0)
+|   PAR > 0.059938: music (44.0/1.0)
+
+Number of Leaves  : 	11
+
+Size of the tree : 	21
+
+
+Time taken to build model: 0.02 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         106               82.8125 %
+Incorrectly Classified Instances        22               17.1875 %
+Kappa statistic                          0.6563
+Mean absolute error                      0.1815
+Root mean squared error                  0.3862
+Relative absolute error                 36.2878 %
+Root relative squared error             77.1956 %
+Total Number of Instances              128     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.828     0.172      0.828     0.828     0.828      0.837    music
+                 0.828     0.172      0.828     0.828     0.828      0.837    speech
+Weighted Avg.    0.828     0.172      0.828     0.828     0.828      0.837
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 53 11 |  a = music
+ 11 53 |  b = speech
+
