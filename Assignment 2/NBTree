@@ -1,0 +1,129 @@
+=== Run information ===
+
+Scheme:weka.classifiers.trees.NBTree 
+Relation:     music_speech
+Instances:    128
+Attributes:   5
+              RMS
+              PAR
+              ZCR
+              MAD
+              class
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+NBTree
+------------------
+
+MAD <= 0.033981: NB 1
+MAD > 0.033981
+|   PAR <= 4.363834: NB 3
+|   PAR > 4.363834: NB 4
+
+Leaf number: 1 Naive Bayes Classifier
+
+                Class
+Attribute       music speech
+               (0.25) (0.75)
+=============================
+RMS
+  'All'           20.0   60.0
+  [total]         20.0   60.0
+
+PAR
+  'All'           20.0   60.0
+  [total]         20.0   60.0
+
+ZCR
+  'All'           20.0   60.0
+  [total]         20.0   60.0
+
+MAD
+  'All'           20.0   60.0
+  [total]         20.0   60.0
+
+
+
+Leaf number: 3 Naive Bayes Classifier
+
+                       Class
+Attribute              music speech
+                      (0.38) (0.63)
+====================================
+RMS
+  'All'                   3.0    5.0
+  [total]                 3.0    5.0
+
+PAR
+  'All'                   3.0    5.0
+  [total]                 3.0    5.0
+
+ZCR
+  '(-inf-0.096991]'       3.0    1.0
+  '(0.096991-inf)'        1.0    5.0
+  [total]                 4.0    6.0
+
+MAD
+  'All'                   3.0    5.0
+  [total]                 3.0    5.0
+
+
+
+Leaf number: 4 Naive Bayes Classifier
+
+                Class
+Attribute       music speech
+               (0.96) (0.04)
+=============================
+RMS
+  'All'           44.0    2.0
+  [total]         44.0    2.0
+
+PAR
+  'All'           44.0    2.0
+  [total]         44.0    2.0
+
+ZCR
+  'All'           44.0    2.0
+  [total]         44.0    2.0
+
+MAD
+  'All'           44.0    2.0
+  [total]         44.0    2.0
+
+
+
+
+Number of Leaves  : 	3
+
+Size of the tree : 	5
+
+
+Time taken to build model: 0.12 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         102               79.6875 %
+Incorrectly Classified Instances        26               20.3125 %
+Kappa statistic                          0.5938
+Mean absolute error                      0.2618
+Root mean squared error                  0.3819
+Relative absolute error                 52.3347 %
+Root relative squared error             76.3304 %
+Total Number of Instances              128     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.844     0.25       0.771     0.844     0.806      0.865    music
+                 0.75      0.156      0.828     0.75      0.787      0.865    speech
+Weighted Avg.    0.797     0.203      0.8       0.797     0.796      0.865
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 54 10 |  a = music
+ 16 48 |  b = speech
+
