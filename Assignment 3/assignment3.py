@@ -11,7 +11,7 @@ txt = open(filename)
 fileList = txt.readlines()
 num_files = len(fileList)
 
-f = open("assignment2.arff", "w")
+f = open("whole-song.arff", "w")
 f.write('''@RELATION music_speech
 @ATTRIBUTE RMS NUMERIC
 @ATTRIBUTE PAR NUMERIC
@@ -20,8 +20,20 @@ f.write('''@RELATION music_speech
 @ATTRIBUTE class {music,speech}\n
 @DATA\n''')
 
-features_music = np.zeros((num_files,4))
-features_speech = np.zeros((num_files,4))
+g = open("buffer-based.arff", "w")
+g.write('''@RELATION music_speech
+@ATTRIBUTE RMS_MEAN NUMERIC
+@ATTRIBUTE PAR_MEAN NUMERIC
+@ATTRIBUTE ZCR_MEAN NUMERIC
+@ATTRIBUTE MAD_MEAN NUMERIC
+@ATTRIBUTE MEAN_AD_MEAN NUMERIC
+@ATTRIBUTE RMS_STD NUMERIC
+@ATTRIBUTE PAR_STD NUMERIC
+@ATTRIBUTE ZCR_STD NUMERIC
+@ATTRIBUTE MAD_STD NUMERIC
+@ATTRIBUTE MEAN_AD_STD NUMERIC
+@ATTRIBUTE class {music,speech}\n
+@DATA\n''')
 
 for i in range(num_files):
 	j, k = fileList[i].split("\t") #split string after \t
@@ -40,29 +52,24 @@ for i in range(num_files):
 	ZCR = (1/float(len-1))*(np.sum(npNeg))
 
 	MAD = np.median(np.abs(sampleArray - np.median(sampleArray)))
-	
 	f.write("%f,%f,%f,%f,%s" %(RMS, PAR, ZCR, MAD, k)) #write to arff file
+
+	for i in range(len)
+		start = i * 512
+		end = (i+2) * 512
+		buffer_data = sample[start:end]
+		
+		RMS = np.sqrt((1/float(1024))*(np.sum(np.square(buffer_data))))
+		PAR = (np.max(np.absolute(buffer_data)))/RMS
 	
-	data = [RMS, PAR, ZCR, MAD]
-	if "music" in k:
-		features_music[i] = data
-	else:
-		features_speech[i] = data
+		#to calculate ZCR
+		npSign = np.sign(buffer_data)
+		npBinary = npSign[1:] * npSign[:-1]
+		npNeg = np.array([x for x in npBinary if x < 0])
+		npNeg[npNeg < 0] = 1
+		ZCR = (1/float(1024-1))*(np.sum(npNeg))
 
-ZCRplot = plt.scatter(features_music[:,2], features_music[:,1], c = "red", marker = "o")
-PARplot = plt.scatter(features_speech[:,2], features_speech[:,1], c = "blue", marker = "x")
-plt.xlabel("ZCR")
-plt.ylabel("PAR")
-plt.legend((ZCRplot, PARplot), ('ZCR', 'PAR'), loc = 4)
-plt.savefig("ZCRxPAR.png")
-
-plt.clf() #clear the figure
-
-RMSplot = plt.scatter(features_music[:,0], features_music[:,3], c = "green", marker = "^")
-MADplot = plt.scatter(features_speech[:,0], features_speech[:,3], c = "orange", marker = "s")
-plt.xlabel("RMS")
-plt.ylabel("MAD")
-plt.legend((RMSplot, MADplot), ('RMS', 'MAD'), loc = 4)
-plt.savefig("RMSxMAD.png")
-
+		MAD = np.median(np.abs(buffer_data - np.median(buffer_data)))
+		MEAN_AD = np.mean(np.abs(buffer_data - np.mean(buffer_data)))
+		
 f.close()
