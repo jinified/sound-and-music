@@ -2,8 +2,6 @@ from sys import argv
 from scipy.io import wavfile
 import numpy as np
 import arff
-import matplotlib.pyplot as plt
-#import pylab
 
 script, filename = argv
 
@@ -68,7 +66,7 @@ for i in range(num_files):
 		npNeg = np.array([x for x in npBinary if x < 0])
 		npNeg[npNeg < 0] = 1
 		ZCR = (1/float(1024-1))*(np.sum(npNeg))
-
+		
 		MAD = np.median(np.abs(buffer_data - np.median(buffer_data)))
 		MEAN_AD = np.mean(np.abs(buffer_data - np.mean(buffer_data)))
 		
