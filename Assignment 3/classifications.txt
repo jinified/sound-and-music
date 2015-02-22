@@ -1,0 +1,259 @@
+The performance of the J48 algorithm on both buffer-based and whole-song ARFF files is much better than the Decision Tree.
+However, both algorithms on the buffer-based produce better results than on the whole-song ARFF, as they correctly classified more than 90% of all files.
+The best result among the four belongs to trees.J48 on the buffer-based ARFF file.
+
+BUFFER-BASED
+=== Run information ===
+
+Scheme:weka.classifiers.trees.J48 -C 0.25 -M 2
+Relation:     music_speech
+Instances:    128
+Attributes:   11
+              RMS_MEAN
+              PAR_MEAN
+              ZCR_MEAN
+              MAD_MEAN
+              MEAN_AD_MEAN
+              RMS_STD
+              PAR_STD
+              ZCR_STD
+              MAD_STD
+              MEAN_AD_STD
+              class
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+J48 pruned tree
+------------------
+
+PAR_STD <= 0.633063: music (60.0)
+PAR_STD > 0.633063
+|   ZCR_STD <= 0.04332
+|   |   PAR_MEAN <= 3.089335: speech (5.0/1.0)
+|   |   PAR_MEAN > 3.089335: music (3.0)
+|   ZCR_STD > 0.04332: speech (60.0)
+
+Number of Leaves  : 	4
+
+Size of the tree : 	7
+
+
+Time taken to build model: 0.03 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         123               96.0938 %
+Incorrectly Classified Instances         5                3.9063 %
+Kappa statistic                          0.9219
+Mean absolute error                      0.043 
+Root mean squared error                  0.2001
+Relative absolute error                  8.5892 %
+Root relative squared error             39.997  %
+Total Number of Instances              128     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.953     0.031      0.968     0.953     0.961      0.96     music
+                 0.969     0.047      0.954     0.969     0.961      0.96     speech
+Weighted Avg.    0.961     0.039      0.961     0.961     0.961      0.96 
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 61  3 |  a = music
+  2 62 |  b = speech
+
+WHOLE-SONG
+=== Run information ===
+
+Scheme:weka.classifiers.trees.J48 -C 0.25 -M 2
+Relation:     music_speech
+Instances:    128
+Attributes:   5
+              RMS
+              PAR
+              ZCR
+              MAD
+              class
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+J48 pruned tree
+------------------
+
+MAD <= 0.033813
+|   PAR <= 11.608024
+|   |   PAR <= 4.743887: speech (23.0/1.0)
+|   |   PAR > 4.743887
+|   |   |   RMS <= 0.082649
+|   |   |   |   MAD <= 0.019379
+|   |   |   |   |   RMS <= 0.02665: music (3.0)
+|   |   |   |   |   RMS > 0.02665
+|   |   |   |   |   |   ZCR <= 0.055341
+|   |   |   |   |   |   |   MAD <= 0.012573: speech (3.0)
+|   |   |   |   |   |   |   MAD > 0.012573: music (3.0)
+|   |   |   |   |   |   ZCR > 0.055341: speech (7.0)
+|   |   |   |   MAD > 0.019379: music (12.0)
+|   |   |   RMS > 0.082649: speech (8.0)
+|   PAR > 11.608024: speech (19.0)
+MAD > 0.033813
+|   PAR <= 4.308881
+|   |   ZCR <= 0.096596: music (2.0)
+|   |   ZCR > 0.096596: speech (4.0)
+|   PAR > 4.308881: music (44.0/1.0)
+
+Number of Leaves  : 	11
+
+Size of the tree : 	21
+
+
+Time taken to build model: 0.02 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         106               82.8125 %
+Incorrectly Classified Instances        22               17.1875 %
+Kappa statistic                          0.6563
+Mean absolute error                      0.1815
+Root mean squared error                  0.3862
+Relative absolute error                 36.2878 %
+Root relative squared error             77.1956 %
+Total Number of Instances              128     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.828     0.172      0.828     0.828     0.828      0.837    music
+                 0.828     0.172      0.828     0.828     0.828      0.837    speech
+Weighted Avg.    0.828     0.172      0.828     0.828     0.828      0.837
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 53 11 |  a = music
+ 11 53 |  b = speech
+
+BUFFER-BASED
+=== Run information ===
+
+Scheme:weka.classifiers.rules.DecisionTable -X 1 -S "weka.attributeSelection.BestFirst -D 1 -N 5"
+Relation:     music_speech
+Instances:    128
+Attributes:   11
+              RMS_MEAN
+              PAR_MEAN
+              ZCR_MEAN
+              MAD_MEAN
+              MEAN_AD_MEAN
+              RMS_STD
+              PAR_STD
+              ZCR_STD
+              MAD_STD
+              MEAN_AD_STD
+              class
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+Decision Table:
+
+Number of training instances: 128
+Number of Rules : 11
+Non matches covered by Majority class.
+	Best first.
+	Start set: no attributes
+	Search direction: forward
+	Stale search after 5 node expansions
+	Total number of subsets evaluated: 53
+	Merit of best subset found:   97.656
+Evaluation (for feature selection): CV (leave one out) 
+Feature set: 7,8,11
+
+Time taken to build model: 0.15 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         120               93.75   %
+Incorrectly Classified Instances         8                6.25   %
+Kappa statistic                          0.875 
+Mean absolute error                      0.0948
+Root mean squared error                  0.2222
+Relative absolute error                 18.952  %
+Root relative squared error             44.4173 %
+Total Number of Instances              128     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.922     0.047      0.952     0.922     0.937      0.971    music
+                 0.953     0.078      0.924     0.953     0.938      0.971    speech
+Weighted Avg.    0.938     0.063      0.938     0.938     0.937      0.971
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 59  5 |  a = music
+  3 61 |  b = speech
+
+WHOLE-SONG
+=== Run information ===
+
+Scheme:weka.classifiers.rules.DecisionTable -X 1 -S "weka.attributeSelection.BestFirst -D 1 -N 5"
+Relation:     music_speech
+Instances:    128
+Attributes:   5
+              RMS
+              PAR
+              ZCR
+              MAD
+              class
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+Decision Table:
+
+Number of training instances: 128
+Number of Rules : 5
+Non matches covered by Majority class.
+	Best first.
+	Start set: no attributes
+	Search direction: forward
+	Stale search after 5 node expansions
+	Total number of subsets evaluated: 10
+	Merit of best subset found:   82.813
+Evaluation (for feature selection): CV (leave one out) 
+Feature set: 2,4,5
+
+Time taken to build model: 0.01 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         102               79.6875 %
+Incorrectly Classified Instances        26               20.3125 %
+Kappa statistic                          0.5938
+Mean absolute error                      0.3087
+Root mean squared error                  0.3923
+Relative absolute error                 61.6979 %
+Root relative squared error             78.4208 %
+Total Number of Instances              128     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.797     0.203      0.797     0.797     0.797      0.832    music
+                 0.797     0.203      0.797     0.797     0.797      0.832    speech
+Weighted Avg.    0.797     0.203      0.797     0.797     0.797      0.832
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 51 13 |  a = music
+ 13 51 |  b = speech
