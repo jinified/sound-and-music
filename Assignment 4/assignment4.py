@@ -1,5 +1,7 @@
 from sys import argv
 from scipy.io import wavfile
+from scipy import signal
+from scipy.fftpack import fft
 import numpy as np
 import arff
 
@@ -13,6 +15,7 @@ def main():
 	
 	writeHeader()
 	bufferMatrix = np.zeros((1290, 1024))
+	dftMatrix = np.zeros((1290, 1024))
 	
 	for i in range(num_files):
 		j, k = fileList[i].split("\t") #split string after \t
@@ -27,18 +30,21 @@ def main():
 		end = 1024
 		for j in range(num_buffer):
 			buffer_data = sampleArray[start:end]
-			bufferMatrix[j,: ] = buffer_data
+			buffer_data = buffer_data * signal.hamming(len(buffer_data))
+			bufferDFT = fft(buffer_data)
+			bufferDFT = np.array([x for x in bufferDFT if x >= 0])
+			dftMatrix[j,: ] = bufferDFT
 			start = start + 512
 			end = end + 512
 	
-		featureMatrix = np.zeros((num_buffer, 5))
-		featureMatrix[:,0] = calcRMS(bufferMatrix)
-		featureMatrix[:,1] = calcPAR(bufferMatrix, featureMatrix[:,0])
-		featureMatrix[:,2] = calcZCR(bufferMatrix)
-		featureMatrix[:,3] = calcMAD(bufferMatrix)
-		featureMatrix[:,4] = calcMEAN_AD(bufferMatrix)
+		#featureMatrix = np.zeros((num_buffer, 5))
+		#featureMatrix[:,0] = calcRMS(bufferMatrix)
+		#featureMatrix[:,1] = calcPAR(bufferMatrix, featureMatrix[:,0])
+		#featureMatrix[:,2] = calcZCR(bufferMatrix)
+		#featureMatrix[:,3] = calcMAD(bufferMatrix)
+		#featureMatrix[:,4] = calcMEAN_AD(bufferMatrix)
 	
-		writeData(featureMatrix, k)
+		#writeData(featureMatrix, k)
 
 def writeHeader():
 	f = open("dft.arff", "w")
