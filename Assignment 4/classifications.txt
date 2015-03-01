@@ -1,0 +1,494 @@
+Trees.J48 has a correct classification rate of 91.4063%.
+Compared to the other two, which are in the 80-90% range,
+Trees.J48 is still the best.
+
+
+
+Trees.J48
+=== Run information ===
+
+Scheme:weka.classifiers.trees.J48 -C 0.25 -M 2
+Relation:     music_speech
+Instances:    128
+Attributes:   11
+              SC_MEAN
+              SRO_MEAN
+              SFM_MEAN
+              PARFFT_MEAN
+              FLUX_MEAN
+              SC_STD
+              SRO_STD
+              SFM_STD
+              PARFFT_STD
+              FLUX_STD
+              class
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+J48 pruned tree
+------------------
+
+PARFFT_STD <= 3.249124
+|   SFM_MEAN <= 0.404686
+|   |   PARFFT_STD <= 2.783356: music (47.0)
+|   |   PARFFT_STD > 2.783356
+|   |   |   SFM_STD <= 0.105588: music (14.0/1.0)
+|   |   |   SFM_STD > 0.105588: speech (11.0/2.0)
+|   SFM_MEAN > 0.404686: speech (11.0/1.0)
+PARFFT_STD > 3.249124: speech (45.0/1.0)
+
+Number of Leaves  : 	5
+
+Size of the tree : 	9
+
+
+Time taken to build model: 0.03 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         117               91.4063 %
+Incorrectly Classified Instances        11                8.5938 %
+Kappa statistic                          0.8281
+Mean absolute error                      0.103 
+Root mean squared error                  0.2848
+Relative absolute error                 20.5887 %
+Root relative squared error             56.9296 %
+Total Number of Instances              128     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.859     0.031      0.965     0.859     0.909      0.917    music
+                 0.969     0.141      0.873     0.969     0.919      0.917    speech
+Weighted Avg.    0.914     0.086      0.919     0.914     0.914      0.917
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 55  9 |  a = music
+  2 62 |  b = speech
+
+
+
+
+
+
+Meta.RandomSubSpace
+=== Run information ===
+
+Scheme:weka.classifiers.meta.RandomSubSpace -P 0.5 -S 1 -I 10 -W weka.classifiers.trees.REPTree -- -M 2 -V 0.001 -N 3 -S 1 -L -1
+Relation:     music_speech
+Instances:    128
+Attributes:   11
+              SC_MEAN
+              SRO_MEAN
+              SFM_MEAN
+              PARFFT_MEAN
+              FLUX_MEAN
+              SC_STD
+              SRO_STD
+              SFM_STD
+              PARFFT_STD
+              FLUX_STD
+              class
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+All the base classifiers: 
+
+FilteredClassifier using weka.classifiers.trees.REPTree -M 2 -V 0.001 -N 3 -S 382177828 -L -1 on data filtered through weka.filters.unsupervised.attribute.Remove -V -R 4,10,8,2,5,11
+
+Filtered Header
+@relation 'music_speech-weka.filters.unsupervised.attribute.Remove-V-R4,10,8,2,5,11'
+
+@attribute PARFFT_MEAN numeric
+@attribute FLUX_STD numeric
+@attribute SFM_STD numeric
+@attribute SRO_MEAN numeric
+@attribute FLUX_MEAN numeric
+@attribute class {music,speech}
+
+@data
+
+
+Classifier Model
+
+REPTree
+============
+
+SFM_STD < 0.11 : music (41/7) [18/2]
+SFM_STD >= 0.11
+|   SFM_STD < 0.15
+|   |   FLUX_MEAN < 55.78 : speech (15/1) [5/0]
+|   |   FLUX_MEAN >= 55.78
+|   |   |   PARFFT_MEAN < 11.49 : music (6/0) [8/3]
+|   |   |   PARFFT_MEAN >= 11.49 : speech (6/1) [4/1]
+|   SFM_STD >= 0.15 : speech (17/0) [8/0]
+
+Size of the tree : 9
+
+FilteredClassifier using weka.classifiers.trees.REPTree -M 2 -V 0.001 -N 3 -S -1591909502 -L -1 on data filtered through weka.filters.unsupervised.attribute.Remove -V -R 8,4,5,10,2,11
+
+Filtered Header
+@relation 'music_speech-weka.filters.unsupervised.attribute.Remove-V-R8,4,5,10,2,11'
+
+@attribute SFM_STD numeric
+@attribute PARFFT_MEAN numeric
+@attribute FLUX_MEAN numeric
+@attribute FLUX_STD numeric
+@attribute SRO_MEAN numeric
+@attribute class {music,speech}
+
+@data
+
+
+Classifier Model
+
+REPTree
+============
+
+SFM_STD < 0.13
+|   FLUX_STD < 51.2 : music (27/2) [17/4]
+|   FLUX_STD >= 51.2
+|   |   SRO_MEAN < 211.54
+|   |   |   PARFFT_MEAN < 9.95 : speech (3/0) [1/1]
+|   |   |   PARFFT_MEAN >= 9.95
+|   |   |   |   SRO_MEAN < 144.35 : speech (9/3) [4/1]
+|   |   |   |   SRO_MEAN >= 144.35 : music (6/0) [4/0]
+|   |   SRO_MEAN >= 211.54 : music (4/0) [1/0]
+SFM_STD >= 0.13 : speech (36/5) [16/1]
+
+Size of the tree : 11
+
+FilteredClassifier using weka.classifiers.trees.REPTree -M 2 -V 0.001 -N 3 -S 439451727 -L -1 on data filtered through weka.filters.unsupervised.attribute.Remove -V -R 3,5,9,10,1,11
+
+Filtered Header
+@relation 'music_speech-weka.filters.unsupervised.attribute.Remove-V-R3,5,9,10,1,11'
+
+@attribute SFM_MEAN numeric
+@attribute FLUX_MEAN numeric
+@attribute PARFFT_STD numeric
+@attribute FLUX_STD numeric
+@attribute SC_MEAN numeric
+@attribute class {music,speech}
+
+@data
+
+
+Classifier Model
+
+REPTree
+============
+
+PARFFT_STD < 3.21
+|   SFM_MEAN < 0.42
+|   |   PARFFT_STD < 2.76 : music (32/0) [14/0]
+|   |   PARFFT_STD >= 2.76
+|   |   |   SFM_MEAN < 0.34 : music (11/2) [8/2]
+|   |   |   SFM_MEAN >= 0.34 : speech (4/0) [3/1]
+|   SFM_MEAN >= 0.42 : speech (5/0) [3/0]
+PARFFT_STD >= 3.21 : speech (33/1) [15/1]
+
+Size of the tree : 9
+
+FilteredClassifier using weka.classifiers.trees.REPTree -M 2 -V 0.001 -N 3 -S -1591916437 -L -1 on data filtered through weka.filters.unsupervised.attribute.Remove -V -R 8,4,5,3,1,11
+
+Filtered Header
+@relation 'music_speech-weka.filters.unsupervised.attribute.Remove-V-R8,4,5,3,1,11'
+
+@attribute SFM_STD numeric
+@attribute PARFFT_MEAN numeric
+@attribute FLUX_MEAN numeric
+@attribute SFM_MEAN numeric
+@attribute SC_MEAN numeric
+@attribute class {music,speech}
+
+@data
+
+
+Classifier Model
+
+REPTree
+============
+
+SFM_STD < 0.12 : music (43/7) [24/6]
+SFM_STD >= 0.12 : speech (42/7) [19/3]
+
+Size of the tree : 3
+
+FilteredClassifier using weka.classifiers.trees.REPTree -M 2 -V 0.001 -N 3 -S 1363648878 -L -1 on data filtered through weka.filters.unsupervised.attribute.Remove -V -R 4,1,6,2,9,11
+
+Filtered Header
+@relation 'music_speech-weka.filters.unsupervised.attribute.Remove-V-R4,1,6,2,9,11'
+
+@attribute PARFFT_MEAN numeric
+@attribute SC_MEAN numeric
+@attribute SC_STD numeric
+@attribute SRO_MEAN numeric
+@attribute PARFFT_STD numeric
+@attribute class {music,speech}
+
+@data
+
+
+Classifier Model
+
+REPTree
+============
+
+PARFFT_STD < 2.81
+|   SC_MEAN < 130.07 : music (37/0) [13/2]
+|   SC_MEAN >= 130.07 : speech (3/0) [1/0]
+PARFFT_STD >= 2.81
+|   PARFFT_STD < 3.21
+|   |   SC_MEAN < 74.23 : music (3/0) [5/0]
+|   |   SC_MEAN >= 74.23
+|   |   |   SC_STD < 23.26 : music (3/1) [1/0]
+|   |   |   SC_STD >= 23.26 : speech (7/0) [7/3]
+|   PARFFT_STD >= 3.21 : speech (32/0) [16/2]
+
+Size of the tree : 11
+
+FilteredClassifier using weka.classifiers.trees.REPTree -M 2 -V 0.001 -N 3 -S 977021371 -L -1 on data filtered through weka.filters.unsupervised.attribute.Remove -V -R 8,6,1,5,10,11
+
+Filtered Header
+@relation 'music_speech-weka.filters.unsupervised.attribute.Remove-V-R8,6,1,5,10,11'
+
+@attribute SFM_STD numeric
+@attribute SC_STD numeric
+@attribute SC_MEAN numeric
+@attribute FLUX_MEAN numeric
+@attribute FLUX_STD numeric
+@attribute class {music,speech}
+
+@data
+
+
+Classifier Model
+
+REPTree
+============
+
+SC_STD < 38.12 : music (57/16) [26/7]
+SC_STD >= 38.12 : speech (28/2) [17/2]
+
+Size of the tree : 3
+
+FilteredClassifier using weka.classifiers.trees.REPTree -M 2 -V 0.001 -N 3 -S -855819171 -L -1 on data filtered through weka.filters.unsupervised.attribute.Remove -V -R 6,1,2,3,8,11
+
+Filtered Header
+@relation 'music_speech-weka.filters.unsupervised.attribute.Remove-V-R6,1,2,3,8,11'
+
+@attribute SC_STD numeric
+@attribute SC_MEAN numeric
+@attribute SRO_MEAN numeric
+@attribute SFM_MEAN numeric
+@attribute SFM_STD numeric
+@attribute class {music,speech}
+
+@data
+
+
+Classifier Model
+
+REPTree
+============
+
+SC_STD < 38.12 : music (55/15) [28/8]
+SC_STD >= 38.12
+|   SFM_STD < 0.13 : music (3/1) [1/0]
+|   SFM_STD >= 0.13 : speech (27/1) [14/0]
+
+Size of the tree : 5
+
+FilteredClassifier using weka.classifiers.trees.REPTree -M 2 -V 0.001 -N 3 -S -1229589420 -L -1 on data filtered through weka.filters.unsupervised.attribute.Remove -V -R 2,6,8,3,5,11
+
+Filtered Header
+@relation 'music_speech-weka.filters.unsupervised.attribute.Remove-V-R2,6,8,3,5,11'
+
+@attribute SRO_MEAN numeric
+@attribute SC_STD numeric
+@attribute SFM_STD numeric
+@attribute SFM_MEAN numeric
+@attribute FLUX_MEAN numeric
+@attribute class {music,speech}
+
+@data
+
+
+Classifier Model
+
+REPTree
+============
+
+SFM_STD < 0.13
+|   SFM_STD < 0.11
+|   |   SRO_MEAN < 140.17
+|   |   |   SFM_STD < 0.05 : music (6/0) [4/0]
+|   |   |   SFM_STD >= 0.05
+|   |   |   |   FLUX_MEAN < 49.37 : music (5/1) [3/0]
+|   |   |   |   FLUX_MEAN >= 49.37
+|   |   |   |   |   SRO_MEAN < 123.72 : speech (3/0) [1/0]
+|   |   |   |   |   SRO_MEAN >= 123.72 : music (2/1) [3/0]
+|   |   SRO_MEAN >= 140.17 : music (24/1) [8/2]
+|   SFM_STD >= 0.11
+|   |   SRO_MEAN < 160.56 : speech (3/0) [1/1]
+|   |   SRO_MEAN >= 160.56
+|   |   |   SFM_MEAN < 0.38 : music (8/1) [0/0]
+|   |   |   SFM_MEAN >= 0.38 : speech (3/0) [2/0]
+SFM_STD >= 0.13 : speech (31/1) [21/5]
+
+Size of the tree : 17
+
+FilteredClassifier using weka.classifiers.trees.REPTree -M 2 -V 0.001 -N 3 -S 865818411 -L -1 on data filtered through weka.filters.unsupervised.attribute.Remove -V -R 1,2,5,9,10,11
+
+Filtered Header
+@relation 'music_speech-weka.filters.unsupervised.attribute.Remove-V-R1,2,5,9,10,11'
+
+@attribute SC_MEAN numeric
+@attribute SRO_MEAN numeric
+@attribute FLUX_MEAN numeric
+@attribute PARFFT_STD numeric
+@attribute FLUX_STD numeric
+@attribute class {music,speech}
+
+@data
+
+
+Classifier Model
+
+REPTree
+============
+
+PARFFT_STD < 3.26
+|   PARFFT_STD < 2.68 : music (28/0) [21/4]
+|   PARFFT_STD >= 2.68
+|   |   SC_MEAN < 114.03 : music (16/3) [9/4]
+|   |   SC_MEAN >= 114.03 : speech (6/0) [3/0]
+PARFFT_STD >= 3.26 : speech (35/1) [10/0]
+
+Size of the tree : 7
+
+FilteredClassifier using weka.classifiers.trees.REPTree -M 2 -V 0.001 -N 3 -S 1787015706 -L -1 on data filtered through weka.filters.unsupervised.attribute.Remove -V -R 9,5,8,4,1,11
+
+Filtered Header
+@relation 'music_speech-weka.filters.unsupervised.attribute.Remove-V-R9,5,8,4,1,11'
+
+@attribute PARFFT_STD numeric
+@attribute FLUX_MEAN numeric
+@attribute SFM_STD numeric
+@attribute PARFFT_MEAN numeric
+@attribute SC_MEAN numeric
+@attribute class {music,speech}
+
+@data
+
+
+Classifier Model
+
+REPTree
+============
+
+PARFFT_STD < 2.95
+|   SC_MEAN < 130.07 : music (39/2) [20/3]
+|   SC_MEAN >= 130.07 : speech (2/0) [2/0]
+PARFFT_STD >= 2.95
+|   SFM_STD < 0.12
+|   |   FLUX_MEAN < 57.91
+|   |   |   PARFFT_STD < 3.38 : music (5/0) [3/1]
+|   |   |   PARFFT_STD >= 3.38 : speech (4/1) [1/0]
+|   |   FLUX_MEAN >= 57.91 : speech (7/0) [2/2]
+|   SFM_STD >= 0.12 : speech (28/0) [15/0]
+
+Size of the tree : 11
+
+
+
+Time taken to build model: 0.04 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         111               86.7188 %
+Incorrectly Classified Instances        17               13.2813 %
+Kappa statistic                          0.7344
+Mean absolute error                      0.2526
+Root mean squared error                  0.3215
+Relative absolute error                 50.496  %
+Root relative squared error             64.2542 %
+Total Number of Instances              128     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.891     0.156      0.851     0.891     0.87       0.94     music
+                 0.844     0.109      0.885     0.844     0.864      0.94     speech
+Weighted Avg.    0.867     0.133      0.868     0.867     0.867      0.94 
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 57  7 |  a = music
+ 10 54 |  b = speech
+
+
+
+
+
+Rules.OneR
+=== Run information ===
+
+Scheme:weka.classifiers.rules.OneR -B 6
+Relation:     music_speech
+Instances:    128
+Attributes:   11
+              SC_MEAN
+              SRO_MEAN
+              SFM_MEAN
+              PARFFT_MEAN
+              FLUX_MEAN
+              SC_STD
+              SRO_STD
+              SFM_STD
+              PARFFT_STD
+              FLUX_STD
+              class
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+PARFFT_STD:
+	< 2.9532930000000004	-> music
+	>= 2.9532930000000004	-> speech
+(109/128 instances correct)
+
+
+Time taken to build model: 0.01 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         107               83.5938 %
+Incorrectly Classified Instances        21               16.4063 %
+Kappa statistic                          0.6719
+Mean absolute error                      0.1641
+Root mean squared error                  0.405 
+Relative absolute error                 32.795  %
+Root relative squared error             80.9636 %
+Total Number of Instances              128     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.828     0.156      0.841     0.828     0.835      0.836    music
+                 0.844     0.172      0.831     0.844     0.837      0.836    speech
+Weighted Avg.    0.836     0.164      0.836     0.836     0.836      0.836
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 53 11 |  a = music
+ 10 54 |  b = speech

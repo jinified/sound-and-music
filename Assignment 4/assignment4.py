@@ -7,6 +7,8 @@ import arff
 
 script, filename = argv
 
+N = 1024
+
 def main():
 	txt = open(filename)
 	fileList = txt.readlines()
@@ -14,8 +16,8 @@ def main():
 	num_files = len(fileList)
 	
 	writeHeader()
-	bufferMatrix = np.zeros((1290, 1024))
-	dftMatrix = np.zeros((1290, 1024))
+	bufferMatrix = np.zeros((1290, N))
+	dftMatrix = np.zeros((1290, N/2+1))
 	
 	for i in range(num_files):
 		j, k = fileList[i].split("\t") #split string after \t
@@ -25,26 +27,27 @@ def main():
 		length = np.size(sampleArray) #number of samples of all files
 	
 		buffer_data = []
-		num_buffer = int(length/1024) * 2
+		num_buffer = int(length/N) * 2
 		start = 0
 		end = 1024
 		for j in range(num_buffer):
 			buffer_data = sampleArray[start:end]
-			buffer_data = buffer_data * signal.hamming(len(buffer_data))
+			buffer_data = buffer_data * signal.hamming(N)
 			bufferDFT = fft(buffer_data)
-			bufferDFT = np.array([x for x in bufferDFT if x >= 0])
+			bufferDFT = bufferDFT[:N/2+1]
+			bufferDFT = np.abs(bufferDFT)
 			dftMatrix[j,: ] = bufferDFT
 			start = start + 512
 			end = end + 512
+		
+		featureMatrix = np.zeros((num_buffer, 5))
+		featureMatrix[:,0] = calcSC(dftMatrix)
+		featureMatrix[:,1] = np.apply_along_axis(calcSRO, 1, dftMatrix)
+		featureMatrix[:,2] = calcSFM(dftMatrix)
+		featureMatrix[:,3] = calcPARFFT(dftMatrix)
+		featureMatrix[:,4] = calcFLUX(dftMatrix)
 	
-		#featureMatrix = np.zeros((num_buffer, 5))
-		#featureMatrix[:,0] = calcRMS(bufferMatrix)
-		#featureMatrix[:,1] = calcPAR(bufferMatrix, featureMatrix[:,0])
-		#featureMatrix[:,2] = calcZCR(bufferMatrix)
-		#featureMatrix[:,3] = calcMAD(bufferMatrix)
-		#featureMatrix[:,4] = calcMEAN_AD(bufferMatrix)
-	
-		#writeData(featureMatrix, k)
+		writeData(featureMatrix, k)
 
 def writeHeader():
 	f = open("dft.arff", "w")
@@ -62,64 +65,61 @@ def writeHeader():
 @ATTRIBUTE class {music,speech}\n
 @DATA\n''')
 		
-def calcRMS(bufferMatrix):
-	RMSMatrix = np.copy(bufferMatrix)
-	RMSMatrix = np.power(RMSMatrix, 2)
-	RMS = np.sum(RMSMatrix, axis = 1)
-	RMS = RMS/1024
-	RMS = np.sqrt(RMS)
-	return RMS
+def calcSC(matrix):
+	SCMatrix = np.copy(matrix)
+	grid = np.indices((1290, 513))
+	SCa = np.sum(grid[1]*SCMatrix, axis=1)
+	SCb = np.sum(SCMatrix, axis=1)
+	SC = SCa/SCb
+	return SC
 	
-def calcPAR(bufferMatrix, RMS):
-	PARMatrix = np.copy(bufferMatrix)
-	PARMatrix = np.absolute(PARMatrix)
-	PAR = np.max(PARMatrix, axis = 1)
-	PAR = PAR/RMS
-	return PAR
+def calcSRO(matrix):
+	SROMatrix = np.copy(matrix)
+	SROcompare = 0.85*np.sum(SROMatrix)
+	SROsum = 0
 	
-def calcZCR(bufferMatrix):
-	ZCRMatrix = np.copy(bufferMatrix)
-	ZCRa = ZCRMatrix[:1290, :1023]
-	ZCRb = ZCRMatrix[:1290, 1:1024]
-	ZCRc = ZCRa * ZCRb
-	ZCR = np.where(ZCRc < 0, 1, 0)
-	ZCR = np.sum(ZCR, axis = 1)
-	ZCR = ZCR/1023.0
-	return ZCR
+	for i in range(0, len(SROMatrix)):
+		SROsum += SROMatrix[i]
+		if SROsum >= SROcompare:
+			return i
+	
+def calcSFM(matrix):
+	gMean = np.exp(np.mean(np.log(matrix), axis=1))
+	aMean = np.mean(matrix, axis=1)
+	SFM = gMean/aMean
+	return SFM
 
-def calcMAD(bufferMatrix):
-	MADMatrix = np.copy(bufferMatrix)
-	firstMed = np.median(MADMatrix, axis = 1)
-	firstMed = np.reshape(firstMed, (len(firstMed), 1))
-	MADMatrix = np.absolute(MADMatrix - firstMed)
-	MAD = np.median(MADMatrix, axis = 1)
-	return MAD
+def calcPARFFT(matrix):
+	RMS = np.sqrt(np.mean(np.square(matrix), axis=1))
+	PAR = np.amax(matrix, axis = 1)
+	PARFFT = PAR/RMS
+	return PARFFT
 
-def calcMEAN_AD(bufferMatrix):
-	MEANMatrix = np.copy(bufferMatrix)
-	firstMean = np.mean(MEANMatrix, axis = 1)
-	firstMean = np.reshape(firstMean, (len(firstMean), 1))
-	MEANMatrix = np.absolute(MEANMatrix - firstMean)
-	MEAN_AD = np.mean(MEANMatrix, axis = 1)
-	return MEAN_AD
+def calcFLUX(matrix):
+	SFMatrix = np.copy(matrix)
+	minusOne = np.zeros(matrix.shape[1])
+	SFprev = np.vstack([minusOne, matrix[:-1]])	
+	SFdiff = SFMatrix - SFprev
+	SF = np.sum(SFdiff.clip(0), axis=1)
+	return SF
 	
 def writeData(featureMatrix, k):
 	f = open("dft.arff", "a")
 	writeMatrix = np.zeros(10)
-	writeMatrix[0:5] = np.mean(featureMatrix, axis = 0)
-	writeMatrix[5:10] = np.std(featureMatrix, axis = 0)
-	RMS_MEAN = writeMatrix[0]
-	PAR_MEAN = writeMatrix[1]
-	ZCR_MEAN = writeMatrix[2]
-	MAD_MEAN = writeMatrix[3]
-	MEAN_AD_MEAN = writeMatrix[4]
+	writeMatrix[0:5] = np.mean(featureMatrix, axis=0)
+	writeMatrix[5:10] = np.std(featureMatrix, axis=0)
+	SC_MEAN = writeMatrix[0]
+	SRO_MEAN = writeMatrix[1]
+	SFM_MEAN = writeMatrix[2]
+	PARFFT_MEAN = writeMatrix[3]
+	FLUX_MEAN = writeMatrix[4]
 	
-	RMS_STD = writeMatrix[5]
-	PAR_STD = writeMatrix[6]
-	ZCR_STD = writeMatrix[7]
-	MAD_STD = writeMatrix[8]
-	MEAN_AD_STD = writeMatrix[9]
+	SC_STD = writeMatrix[5]
+	SRO_STD = writeMatrix[6]
+	SFM_STD = writeMatrix[7]
+	PARFFT_STD = writeMatrix[8]
+	FLUX_STD = writeMatrix[9]
 	
-	f.write("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s" %(RMS_MEAN, PAR_MEAN, ZCR_MEAN, MAD_MEAN, MEAN_AD_MEAN, RMS_STD, PAR_STD, ZCR_STD, MAD_STD, MEAN_AD_STD, k))
+	f.write("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s" %(SC_MEAN, SRO_MEAN, SFM_MEAN, PARFFT_MEAN, FLUX_MEAN, SC_STD, SRO_STD, SFM_STD, PARFFT_STD, FLUX_STD, k))
 	
 main()
