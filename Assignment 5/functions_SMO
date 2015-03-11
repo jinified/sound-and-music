@@ -1,0 +1,159 @@
+=== Run information ===
+
+Scheme:weka.classifiers.functions.SMO -C 1.0 -L 0.001 -P 1.0E-12 -N 0 -V -1 -W 1 -K "weka.classifiers.functions.supportVector.PolyKernel -C 250007 -E 1.0"
+Relation:     music_speech
+Instances:    128
+Attributes:   53
+              MFCC_0
+              MFCC_1
+              MFCC_2
+              MFCC_3
+              MFCC_4
+              MFCC_5
+              MFCC_6
+              MFCC_7
+              MFCC_8
+              MFCC_9
+              MFCC_10
+              MFCC_11
+              MFCC_12
+              MFCC_13
+              MFCC_14
+              MFCC_15
+              MFCC_16
+              MFCC_17
+              MFCC_18
+              MFCC_19
+              MFCC_20
+              MFCC_21
+              MFCC_22
+              MFCC_23
+              MFCC_24
+              MFCC_25
+              MFCC_26
+              MFCC_27
+              MFCC_28
+              MFCC_29
+              MFCC_30
+              MFCC_31
+              MFCC_32
+              MFCC_33
+              MFCC_34
+              MFCC_35
+              MFCC_36
+              MFCC_37
+              MFCC_38
+              MFCC_39
+              MFCC_40
+              MFCC_41
+              MFCC_42
+              MFCC_43
+              MFCC_44
+              MFCC_45
+              MFCC_46
+              MFCC_47
+              MFCC_48
+              MFCC_49
+              MFCC_50
+              MFCC_51
+              class
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+SMO
+
+Kernel used:
+  Linear Kernel: K(x,y) = <x,y>
+
+Classifier for classes: music, speech
+
+BinarySMO
+
+Machine linear: showing attribute weights, not support vectors.
+
+        -1.2019 * (normalized) MFCC_0
+ +      -1.201  * (normalized) MFCC_1
+ +      -0.2929 * (normalized) MFCC_2
+ +      -0.7809 * (normalized) MFCC_3
+ +      -0.1007 * (normalized) MFCC_4
+ +       0.1424 * (normalized) MFCC_5
+ +      -0.4596 * (normalized) MFCC_6
+ +      -0.3907 * (normalized) MFCC_7
+ +       0.284  * (normalized) MFCC_8
+ +       0.4249 * (normalized) MFCC_9
+ +      -0.1371 * (normalized) MFCC_10
+ +      -0.2054 * (normalized) MFCC_11
+ +      -0.2032 * (normalized) MFCC_12
+ +      -0.2437 * (normalized) MFCC_13
+ +      -0.5738 * (normalized) MFCC_14
+ +       0.0172 * (normalized) MFCC_15
+ +      -0.1331 * (normalized) MFCC_16
+ +      -0.305  * (normalized) MFCC_17
+ +      -0.0923 * (normalized) MFCC_18
+ +       0.3823 * (normalized) MFCC_19
+ +      -0.1245 * (normalized) MFCC_20
+ +       0.3977 * (normalized) MFCC_21
+ +       0.5123 * (normalized) MFCC_22
+ +       0.1677 * (normalized) MFCC_23
+ +      -0.1145 * (normalized) MFCC_24
+ +       0.0922 * (normalized) MFCC_25
+ +       0.351  * (normalized) MFCC_26
+ +       0.4531 * (normalized) MFCC_27
+ +      -0.8247 * (normalized) MFCC_28
+ +       0.8307 * (normalized) MFCC_29
+ +       0.3876 * (normalized) MFCC_30
+ +       1.1078 * (normalized) MFCC_31
+ +       1.5569 * (normalized) MFCC_32
+ +       0.9129 * (normalized) MFCC_33
+ +       0.1591 * (normalized) MFCC_34
+ +       0.7363 * (normalized) MFCC_35
+ +      -0.1985 * (normalized) MFCC_36
+ +       0.1164 * (normalized) MFCC_37
+ +      -0.021  * (normalized) MFCC_38
+ +      -0.0801 * (normalized) MFCC_39
+ +      -0.2387 * (normalized) MFCC_40
+ +       0.1794 * (normalized) MFCC_41
+ +       0.2124 * (normalized) MFCC_42
+ +      -0.414  * (normalized) MFCC_43
+ +      -0.3527 * (normalized) MFCC_44
+ +      -0.6869 * (normalized) MFCC_45
+ +      -0.2508 * (normalized) MFCC_46
+ +      -0.2691 * (normalized) MFCC_47
+ +      -0.1941 * (normalized) MFCC_48
+ +      -0.1599 * (normalized) MFCC_49
+ +      -0.0417 * (normalized) MFCC_50
+ +      -1.0273 * (normalized) MFCC_51
+ +       0.7443
+
+Number of kernel evaluations: 2749 (88.172% cached)
+
+
+
+Time taken to build model: 0.04 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         123               96.0938 %
+Incorrectly Classified Instances         5                3.9063 %
+Kappa statistic                          0.9219
+Mean absolute error                      0.0391
+Root mean squared error                  0.1976
+Relative absolute error                  7.8083 %
+Root relative squared error             39.5062 %
+Total Number of Instances              128     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.938     0.016      0.984     0.938     0.96       0.961    music
+                 0.984     0.063      0.94      0.984     0.962      0.961    speech
+Weighted Avg.    0.961     0.039      0.962     0.961     0.961      0.961
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 60  4 |  a = music
+  1 63 |  b = speech
+
