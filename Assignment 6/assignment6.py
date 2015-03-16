@@ -12,104 +12,75 @@ N = 1024
 num_filters = 26
 
 def main():
-	txt = open(filename)
-	fileList = txt.readlines()
-	txt.close()
-	num_files = len(fileList)
 	writeHeader()
 	
-	for i in range(num_files):
-		j, k = fileList[i].split("\t") #split string after \t
-		rate, sample = wavfile.read(j) #read in wavfile
-		sample = sample / 32768.0 #convert sample to floats
-		sampleArray = np.array(sample) #creates array of sample values
-		length = np.size(sampleArray) #number of samples of all files
+	rate, sample = wavfile.read(filename) #read in wavfile
+	sample = sample / 32768.0 #convert sample to floats
+	sampleArray = np.array(sample) #creates array of sample values
+	length = np.size(sampleArray) #number of samples of all files
 		
-		buffer_data = []
-		num_buffer = int(length/1024) * 2
-		buffer_matrix = np.zeros((num_buffer, N))
-		start = 0
-		end = 1024
-		for x in range(num_buffer):
-			buffer_data = sampleArray[start:end]
-			start = start + 512
-			end = end + 512
-			buffer_matrix[x,: ] = buffer_data
-		
-		buffer_emp = preEmphasis(buffer_matrix) #apply pre-emphasis filter
-		buffer_emp = buffer_emp * signal.hamming(N) #apply hamming window
-		buffer_mag = magSpectrum(buffer_emp) #apply mag-spectrum
-		
-		melScale = calMelScale(rate) #calculate mel-scale
-		filters = np.zeros((num_filters, 513))
-		for y in range(num_filters):
-			left, top, right = calFilters(y, melScale, rate/1024.0)
-			filters[y] = triangulate(left, top, right)
-		
-		result = calMFCC(buffer_mag, filters.T)
-		writeData(result, k)
-		
-	plot(filters, rate/2.0)
+	buffer_data = []
+	num_buffer = int(length/(N / 2) - 1)
+	buffer_matrix = np.zeros((num_buffer, N))
+	start = 0
+	end = N
+	for x in range(num_buffer):
+		buffer_data = sampleArray[start:end]
+		start = start + 512
+		end = end + 512
+		buffer_matrix[x,: ] = buffer_data
+
+	buffer_matrix = buffer_matrix * signal.hamming(N) #apply hamming window
+	buffer_mag = magSpectrum(buffer_matrix) #apply mag-spectrum
+	accent_signal = calAccent(num_buffer, buffer_mag) #calculate accent signal
+	auto_signal = autocorr(accent_signal)
 	
-def preEmphasis (data):
-	zeroMatrix = np.zeros((1290, N))
-	temp = data[:, :-1]
-	zeroMatrix[:, 1:N] = temp
-	result = data - (0.95 * zeroMatrix)
-	return result
+	upper_index = int(np.ceil(60/(60*0.0116)))
+	lower_index = int(np.floor(60/(180*0.0116)))
+	tempo_index = getMax(auto_signal, lower_index, upper_index)
+	result = beat_analysis(accent_signal, tempo_index)
+	result = np.array(result) * 0.0116
+	
+	writeData(result)
 
 def magSpectrum (buffer):
 	fft = scipy.fftpack.fft(buffer, axis = 1)
 	mag = np.abs(fft[:, 0:N / 2 + 1])
 	return mag
 	
-def calMelScale(rate):
-	mel = 1127 * np.log(1 + (rate / 2.0) / 700) / (num_filters + 1)
-	return mel
-
-def calFilters(y, mel, normalizer):
-	left = ((np.exp((y * mel)/1127.0) - 1) * 700)/normalizer
-	top = ((np.exp(((y + 1) * mel)/1127.0) - 1) * 700)/normalizer
-	right = ((np.exp(((y + 2) * mel)/1127.0) - 1) * 700)/normalizer
-	return left, top, right
-
-def triangulate(left, top, right):
-	left = np.floor(left)
-	top = round(top)
-	right = np.ceil(right)
-	leftRange = top - left
-	rightRange = right - top
-	leftLine = np.linspace(0, 1, num = (leftRange + 1))
-	leftLine = np.delete(leftLine, leftRange)
-	rightLine = np.linspace(1, 0, num = (rightRange + 1))
-	window = np.concatenate((np.zeros(left), leftLine, rightLine))
-	result = np.concatenate((window, np.zeros(512 - right)))
-	return result
-
-def calMFCC(buffer, filters):
-	result = np.dot(buffer, filters)
-	result = np.log10(result)
-	result = scipy.fftpack.dct(result)
-	return result
+def calAccent (num_buffer, buffer_mag):
+	a = np.copy(buffer_mag)
+	a = np.abs(a[0:num_buffer - 1])
+	b = np.copy(buffer_mag)
+	b = np.abs(b[1:num_buffer])
 	
-def plot(windows, max):
-	freq = np.linspace(0, max, num = 513)
-	plt.figure()
-	for i in range(num_filters):
-		plt.plot(freq, windows[i])
-	plt.ylabel("Amplitude")
-	plt.xlabel("Frequency (Hz)")
-	plt.title("26 Triangular MFCC filters, 22050Hz signal, window size 1024")
-	plt.savefig("figure1.png")
+	result = b - a
+	result = np.where(result < 0, 0, result)
+	sum = np.sum(result, axis = 1)
+	return sum
 
-	plt.figure()
-	for i in range(num_filters):
-		plt.plot(freq, windows[i], '.-')
-	plt.xlim(0, 300)
-	plt.ylabel("Amplitude")
-	plt.xlabel("Frequency (Hz)")
-	plt.title("26 Triangular MFCC filters, 22050Hz signal, window size 1024")
-	plt.savefig("figure2.png")
+def autocorr(x):
+	result = np.correlate(x, x, mode='full')
+	return result[result.size / 2:]
+
+def getMax(array, low, up):
+	result = array[low:up+1].argmax()
+	return result + low
+	
+def beat_analysis(accent_signal, t):
+	a = np.copy(accent_signal)
+	firstBeat = a[0:t].argmax()
+	beats = []
+	beats.append(firstBeat)
+	count = firstBeat + t
+	while count < len(accent_signal):
+		low = count - 10
+		up = count + 10
+		beatIndex = getMax(accent_signal, low, up)
+		beats.append(beatIndex)
+		count = beatIndex
+		count = count + t	
+	return beats
 
 def writeHeader():
 	f = open("mfcc.arff", "w")
@@ -119,16 +90,7 @@ def writeHeader():
 	f.write('''@ATTRIBUTE class {music,speech}\n
 @DATA\n''')
 	
-def writeData(result, k):
-	f = open("mfcc.arff", "a")
-	MeanMFCC = np.mean(result, axis = 0)
-	StdMFCC = np.std(result, axis = 0)
-	
-	MEANstring = np.char.mod('%f', MeanMFCC)
-	MEANstring = ",".join(MEANstring)
-	STDstring = np.char.mod('%f', StdMFCC)
-	STDstring = ",".join(STDstring)
-	
-	f.write("%s,%s,%s" %(MEANstring, STDstring, k))
+def writeData(result):
+	result.tofile('beat_time.csv', sep=',')
 	
 main()
