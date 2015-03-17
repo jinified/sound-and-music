@@ -1,0 +1,7 @@
+The output that was produced is exactly the same as the results provided in the assignment pdf.
+Therefore, the system did beat track the music correctly.
+
+Two assumptions the system made about the music:
+1. The system assumed that 
+2. The system also assumed that
+

@@ -1,19 +1,17 @@
+#Author: Omar Khalid bin Yahya
+#Matric. No: A0094534B
+
 from sys import argv
 from scipy.io import wavfile
 from scipy import signal
 import scipy.fftpack
 import numpy as np
-import arff
-import matplotlib.pyplot as plt
 
 script, filename = argv
 
 N = 1024
-num_filters = 26
 
-def main():
-	writeHeader()
-	
+def main():	
 	rate, sample = wavfile.read(filename) #read in wavfile
 	sample = sample / 32768.0 #convert sample to floats
 	sampleArray = np.array(sample) #creates array of sample values
@@ -81,14 +79,6 @@ def beat_analysis(accent_signal, t):
 		count = beatIndex
 		count = count + t	
 	return beats
-
-def writeHeader():
-	f = open("mfcc.arff", "w")
-	f.write('@RELATION music_speech\n')
-	for i in range(52):
-		f.write('@ATTRIBUTE MFCC_%d NUMERIC\n' % (i))
-	f.write('''@ATTRIBUTE class {music,speech}\n
-@DATA\n''')
 	
 def writeData(result):
 	result.tofile('beat_time.csv', sep=',')
