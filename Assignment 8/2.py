@@ -1,3 +1,6 @@
+#Author: Omar Khalid bin Yahya
+#Matric. No: A0094534B
+
 from scipy.io.wavfile import write
 import scipy.signal
 import numpy as np
@@ -74,10 +77,10 @@ def maxError(LUT_sine_wave, perfect_sine_wave, size):
 
 def writeData(errors):
 	f = open("max_audio_file_error.txt", "w")
-	f.write('Frequency\tInterpolation\t16384-sample\t2048-sample\n')
-	f.write('100Hz\t\tNo\t\t%s\t%s\n' % (str(errors[0]), str(errors[1])))
+	f.write('Frequency\tInterpolation\t16384-sample\t\t2048-sample\n')
+	f.write('100Hz\t\tNo\t\t%s\t\t%s\n' % (str(errors[0]), str(errors[1])))
 	f.write('\t\tLinear\t\t%s\t%s\n' % (str(errors[2]), str(errors[3])))
-	f.write('1234.56Hz\tNo\t\t%s\t%s\n' % (str(errors[4]), str(errors[5])))
-	f.write('\t\tLinear\t\t%s\t%s\n' % (str(errors[6]), str(errors[7])))
+	f.write('1234.56Hz\tNo\t\t%s\t\t%s\n' % (str(errors[4]), str(errors[5])))
+	f.write('\t\tLinear\t\t%s\t\t%s\n' % (str(errors[6]), str(errors[7])))
 
 main()

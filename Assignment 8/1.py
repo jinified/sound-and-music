@@ -1,3 +1,6 @@
+#Author: Omar Khalid bin Yahya
+#Matric. No: A0094534B
+
 from scipy.io.wavfile import write
 import scipy.signal
 import numpy as np

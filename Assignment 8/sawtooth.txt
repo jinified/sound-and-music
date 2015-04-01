@@ -1,0 +1,4 @@
+When I hear the reconstructed sawtooth wave, it sound clean and smooth.
+When I hear the perfect sawtooth wave, it has a slight buzzing to it.
+I would assume that this would have to do with the band-limiting that we do during the reconstruction,
+since the scipy.sawtooth function is not band-limited.
