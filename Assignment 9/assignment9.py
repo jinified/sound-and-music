@@ -11,35 +11,32 @@ os.getcwd()
 
 infile = "clear_d1.wav"
 N = 128 #window size
+fs = 22050.0
 
 def main():
 	rate, sample = read(infile) #read in wavfile
 	sample = sample / 32768.0 #convert sample to floats
 	num_buffer = len(sample) / N
-	buffer_data = np.zeros((num_buffer, 65))
+	buffer_data = np.zeros((num_buffer, N))
 	freq_amp = np.zeros((num_buffer, 2))
-	bin2freq = rate / N
 	
 	for x in range(num_buffer):
-		start = int(x * 128)
-		end = start + 128
-		result = power_spectrum(sample[start:end], np.hamming(N))
-		buffer_data[x,:] = result
+		start = x * N
+		end = start + N
+		slice = sample[start:end]		
+		buffer_data[x,:] = slice
 	
-	freq_amp[:,0] = np.argmax(buffer_data, axis = 1) * bin2freq #frequency
-	freq_amp[:,1] = np.amax(buffer_data, axis = 1) #amplitude
+	db_data = power_spectrum(buffer_data, np.hamming(N))	
+	maxIndex = np.argmax(db_data, axis = 1)
+	maxIndexFreq = maxIndex/float(N) * fs #frequency
+	freq_amp[:,0] = maxIndexFreq
+	freq_amp[:,1] = np.amax(db_data, axis = 1) #amplitude
 	
 	np.savetxt('freq_amp.csv', freq_amp, fmt='%.6g', delimiter=',')
 
 def power_spectrum(x, window):
-	fft = np.fft.fft(x * window)
-	# only keep the positive frequencies
-	fft = fft[:len(fft) / 2 + 1]
-	# magnitude spectrum, normalize
-	magfft = abs(fft) / (np.sum(window) / 2.0)
-	# log-spectrum
-	epsilon = 1e-10
-	db = 20 * np.log10(magfft + epsilon)
+	fft = scipy.fftpack.fft(x * window, axis = 1)
+	db = abs(fft[:,0:N/2+1])
 	return db
 	
 main()
