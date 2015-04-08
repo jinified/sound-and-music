@@ -1,0 +1,10 @@
+In the original wav file, the audio is clear and you can hear a woman speaking clearly.
+However, in the reconstructed wav file, the audio is garbled and although you can make out
+the same pattern of speech as in the original, the words are unclear.
+
+The reason for this is because the reconstructed wav file has undergone an FIR filter.
+
+In the original audio spectrogram, all the frequencies from the irregularities of the speech are 
+clearly represented.
+Whereas in the reconstructed audio spectrogram, some of the frequencies are not plotted out because
+the aforementioned filter has been applied.
